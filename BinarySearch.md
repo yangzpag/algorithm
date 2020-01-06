@@ -9,7 +9,7 @@
 
 **在排序数组中查找第一个大于x的数(upper_bound)**
 
-**在排序数组中查找第一个大于等于x的数(lower_cound)**
+**在排序数组中查找第一个大于等于x的数(lower_bound)**
 
 ```c
 int upper_bound(int A[],int l,int r,int x){   //[l,r)
@@ -84,6 +84,42 @@ int lower_bound(int A[],int l,int r,int x){     //[l,r)
 第k大元素
 
 [378. 有序矩阵中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+
+```c++
+int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n = matrix.size();
+        if(n == 0) return -1;
+        int l = matrix[0][0];
+        int r = matrix[n-1][n-1];
+
+        while(l < r){
+            int mid = l + (r-l)/2;
+            if(getsize(matrix,mid) < k) l = mid + 1;
+            else r = mid;
+        }
+        return l;
+    }
+
+    int getsize(vector<vector<int>>& matrix,int num){
+        int cnt = 0;
+        int n = matrix.size();
+        int i = n-1,j = 0;
+        while(i >= 0){
+            if(j < n && num >= matrix[i][j]) j ++;
+            else{
+                cnt += j;
+                i--;
+            }
+        }
+        return cnt;
+    }
+```
+
+[668. 乘法表中第k小的数](https://leetcode-cn.com/problems/kth-smallest-number-in-multiplication-table/)
+
+[786. 第 K 个最小的素数分数](https://leetcode-cn.com/problems/k-th-smallest-prime-fraction/)
+
+
 
 [719. 找出第 k 小的距离对](https://leetcode-cn.com/problems/find-k-th-smallest-pair-distance/)
 
