@@ -7,32 +7,83 @@
 对于节点编号为有限整数的情况，使用一维数组就可以实现并查集
 
 ```c
-vector<int> f(n);
+	vector<int> f(n);
 
-void init(int n){
-    for(int i=0;i<n;i++){
-        f[i] = i;
+    void init(int n){
+        for(int i=0;i<n;i++){
+            f[i] = i;
+        }
     }
-}
-void find(int x){
-    return f[x] == x?x:f[x] = find(x);
-}
-void merge(int x,int y){
-    int px = find(x);
-    int py = finx(y);
-    if(px != py){
-        f[py] = px;
+    int find(int x){
+        return f[x] == x?x:f[x] = find(f[x]);
     }
-}
+    void merge(int x,int y){
+        int px = find(x);
+        int py = find(y);
+        if(px != py){
+            f[py] = px;
+        }
+    }
 ```
 
 对于编号不是有限整数的情况，可以使用哈希映射实现并查集，其他部分基本一致
 
 ```c++
-unordered_map<string,string> f;
+    unordered_map<string,string> f;
+
+    string find(string x){
+        if(!f.count(x))f[x] = x;
+        return f[x] == x?x:f[x] = find(f[x]);
+    }
+    void merge(string x,string y){
+        string px = find(x);
+        string py = find(y);
+        if(px != py){
+            f[py] = px;
+        }
+    }
+```
+
+同理给出二维的情况
+
+```c++
+	vector<vector<Point>> f; 
+	void init(int m,int n){
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                f[i][j] = Point(i,j);
+            }
+        }
+    }
+    Point find(Point& p){
+        return f[p.first][p.second] == p ? p : 
+        		f[p.first][p.second] = find(f[p.first][p.second]); 
+    }
+
+    void merge(Point& p1,Point& p2){
+        Point pp1 = find(p1);
+        Point pp2 = find(p2);
+        if(pp1 != pp2){
+            f[pp1.first][pp1.second] = pp2;
+        }
+    }
 ```
 
 
+
+### 1.2 模板题
+
+[261. 以图判树](https://leetcode-cn.com/problems/graph-valid-tree/)
+
+[323. 无向图中连通分量的数目](https://leetcode-cn.com/problems/number-of-connected-components-in-an-undirected-graph/)
+
+[737. 句子相似性 II](https://leetcode-cn.com/problems/sentence-similarity-ii/)
+
+### 1.3 比较有技巧性地题目
+
+[952. 按公因数计算最大组件大小](https://leetcode-cn.com/problems/largest-component-size-by-common-factor/)
+
+[399. 除法求值](https://leetcode-cn.com/problems/evaluate-division/)
 
 [685. 冗余连接 II](https://leetcode-cn.com/problems/redundant-connection-ii/)
 
