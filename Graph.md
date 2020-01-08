@@ -89,7 +89,28 @@
 
 
 
+### 1.4 最小生成树
 
+使用并查集的最小生成树算法称克鲁斯卡尔(Kruskal)算法
+
+```c++
+struct Edge{
+    int u,v;
+    int c;
+};
+int Kruskal(vector<Edge> edges,int n){ //点的编号从0开始
+     sort(edges.begin(),edges.end(),[](Edge a,Edge b){return a.c < b.c;});
+     init(n);                         //并查集初始化
+     int ans = 0;
+     for(Edge e:edges){
+         if(!same(e.u,e.v)){          //判断是否在同一个集合
+            ans += e.c;
+            merge(e.u,e.v);           //并查集合并
+         }
+     }
+     return ans;
+}
+```
 
 ## 二分图
 
