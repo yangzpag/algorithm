@@ -62,6 +62,47 @@ int query(int i){
 
 ## 2.线段树（Segment Tree）
 
+```c++
+    vector<int> A;
+    int n;
+    void update(int o,int L,int R,int p,int v){
+        if(L > R) return;
+        if(L == R){
+            A[o] = v;
+            return;
+        } 
+        int M = L + (R - L) / 2;
+        if(p <= M){
+            update(2*o,L,M,p,v);
+        }else{
+            update(2*o+1,M+1,R,p,v);
+        }
+        A[o] = A[2*o] + A[2*o + 1];
+    }
+    void init(int o,int L,int R,vector<int>&nums){
+        if(L > R) return;
+        if(L == R){
+            A[o] = nums[L-1];
+            return;
+        } 
+        int M = L + (R - L) / 2;
+        init(2*o,L,M,nums);
+        init(2*o+1,M+1,R,nums);
+        A[o] = A[2*o] + A[2*o + 1];
+    }
+    int query(int o,int L,int R,int ql,int qr){
+        int M = L + (R-L)/2,ans = 0;
+        if(ql <= L && R <= qr) return A[o];
+        if(ql <= M){
+            ans += query(2*o,L,M,ql,qr);
+        }
+        if(M < qr){
+            ans += query(2*o+1,M+1,R,ql,qr);
+        }
+        return ans;
+    }
+```
+
 
 
 ## 3.离散化
