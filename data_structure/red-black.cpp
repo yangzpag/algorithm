@@ -23,6 +23,7 @@ public:
 	}
 	~RBMap(){
 		destory(root);
+		delete NIL;
 	}
 	
 //private:
@@ -120,15 +121,119 @@ public:
 				}
 				x->parent->color = BLACK;
 				x->parent->parent->color = RED;
-/*				cout << x->parent->parent->key << endl;
-				cout << x->parent->key << endl;
-				cout << x->parent->parent->right->key << endl;
-				cout << x->parent->parent->right->right->key << endl;
-*/
 				left_rotate(x->parent->parent);
 			} 
 		}
 		root->color = BLACK;
+	}
+	//u != NIL 
+	void RBtransplant(RBNodePtr u,RBNodePtr v){
+		if(u == root){
+			root = v;
+		}else if(u == u->parent->left){
+			u->parent->left = v;
+		}else {
+			u->parent->right = v;
+		}
+		v->parent = u->parent;
+	}
+	
+	RBNodePtr RBmin(RBNodePtr rt){
+		RBNodePtr ret = NIL;
+		while(rt != NIL){
+			ret = rt;
+			rt = rt->left;
+		}
+		return ret;
+	}
+	
+	void RBdelete(int key){
+		RBNodePtr z = RBsearch(key);
+		if(z == NIL) return;
+		RBNodePtr y = z,x,w;
+		Color y_origin_color = y->color;
+		if(z->left == NIL){
+			x = z->right;                      // x = y->right
+			RBtransplant(z,x);                 // if x is NIL,NIL's parent will point to z's parent
+		}else if(z->right == NIL){
+			x = z->left;
+			RBtransplant(z,x);
+		}else{
+			y = RBmin(z->right);
+			x = y->right;						
+			y_origin_color = y->color;
+			if(y->parent != z){
+				RBtransplant(y,y->right);      // if x is NIL,NIL's parent will point to z's parent
+				y->right = z->right;
+				y->right->parent = y;
+			}else{
+				x->parent = y;                 // if x is NIL,NIL's parent will point to z's parent
+			}
+			
+			RBtransplant(z,y);
+			y->left = z->left;
+			y->left->parent = y;
+			y->color = z->color;
+		}
+		delete z;
+		
+		//fixup 
+		while(x != root && x->color == BLACK){
+			if(x == x->parent->left){
+				w = x->parent->right;
+				if(w->color == RED){
+					w->color = BLACK;
+					x->parent->color = RED;
+					left_rotate(x->parent);
+					w = x->parent->right;
+				} 
+				
+				if(w->left->color == BLACK && w->right->color == BLACK){
+					w->color = RED;
+					x = x->parent; 
+					continue;
+				}
+				else if(w->right->color == RED){
+					w->color = RED;
+					w->left->color = BLACK;
+					right_rotate(w);
+					w = x->parent->right;
+				}
+				
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
+				w->right->color = BLACK;
+				right_rotate(x->parent);
+				x = root;
+			}else{
+				w = x->parent->right;
+				if(w->color == RED){
+					w->color = BLACK;
+					x->parent->color = RED;
+					left_rotate(x->parent);
+					w = x->parent->right;
+				} 
+					
+				if(w->left->color == BLACK && w->right->color == BLACK){
+					w->color = RED;
+					x = x->parent; 
+					continue;
+				}
+				else if(w->right->color == RED){
+					w->color = RED;
+					w->left->color = BLACK;
+					right_rotate(w);
+					w = x->parent->right;
+				}
+					
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
+				w->right->color = BLACK;
+				right_rotate(x->parent);
+				x = root;	
+			}
+		}
+		x->color =BLACK;	
 	}
 	void destory(RBNodePtr rt){
 		if(rt != NIL){
@@ -144,21 +249,9 @@ public:
 	void print(RBNodePtr rt){
 		if(rt != NIL){
 			print(rt->left);
-			cout << rt->key << ' ' << rt->color << ',';
+			cout << rt->key << ' ';
 			print(rt->right);
 		}
 	}
 };
-int main(){
-	
-	RBMap tree;
-	tree.RBinsert(1,1);
-	//tree.printWalk(); 
-	tree.RBinsert(2,1);
-//	tree.printWalk(); 
-	tree.RBinsert(3,1);
-	tree.printWalk(); 
-	tree.RBinsert(4,1);
-	tree.printWalk(); 
-	return 0;
-} 
+
