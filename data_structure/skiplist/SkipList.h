@@ -1,5 +1,7 @@
 #pragma once
- 
+#include <ctime>
+#include <cstdlib>
+
 struct ListNode{
 	int key,value;
 	ListNode *left,*right,*up,*down;
@@ -14,7 +16,7 @@ void addListNodeAfter(ListNodePtr node,ListNodePtr addnode);
 class SkipList{
 public:
 	SkipList(){
-		srand( (unsigned)time(0) );
+		std::srand( (unsigned)std::time(0) );
 		init();
 	}
 	~SkipList(){
@@ -25,7 +27,7 @@ private:
 	ListNodePtr tophead;
 	int level;
 	const static int MAX_LEVEL = 64;
-	const static double prob = 0.5;
+	constexpr static double prob = 0.5;
 	void init();
 	void destory();
 	void add_new_level(){
