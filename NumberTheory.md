@@ -48,7 +48,7 @@ vector<int> getPrime(int n){  //不包含n
 
 
 
-### 1.3 欧几里得筛（线性筛）
+### 1.3 欧拉（线性筛）
 
 ```c++
 int cnt = 0;
@@ -65,7 +65,7 @@ void get_prime(int n)
     }
  }
 ```
-
+[O(N)的素数筛选法和欧拉函数](https://blog.csdn.net/Dream_you_to_life/article/details/43883367)
 
 ## 快速幂
 ```cpp
